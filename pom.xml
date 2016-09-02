@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ This file is part of Placer, licensed under the MIT License (MIT).
+  ~
+  ~ Copyright (c) Epic Planet Minecraft Server <https://epicpla.net>
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>net.epicpla</groupId>
+    <artifactId>placer</artifactId>
+    <version>1.0</version>
+    <packaging>jar</packaging>
+
+    <name>Placer</name>
+    <description>A short code made to participate in an event.</description>
+    <url>https://epicpla.net/</url>
+    <inceptionYear>2016</inceptionYear>
+    <organization>
+        <name>Epic Planet Minecraft Server</name>
+        <url>https://epicpla.net/</url>
+    </organization>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>finalchild</id>
+            <name>Final Child</name>
+            <email>finalchild@ourmc.space</email>
+            <url>https://finalchild.cf/</url>
+            <organization>Our Minecraft Space</organization>
+            <organizationUrl>https://ourmc.space/</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>Asia/Seoul</timezone>
+        </developer>
+    </developers>
+    <contributors>
+        <contributor>
+            <id>GoldenMine</id>
+            <name>GoldenMine</name>
+            <email>ehe123@naver.com</email>
+            <url>http://cafe.naver.com/scriptrunner</url>
+            <organization>ScriptRunner Dev.</organization>
+            <organizationUrl>http://cafe.naver.com/scriptrunner</organizationUrl>
+            <roles>
+                <role>motivator</role>
+            </roles>
+        </contributor>
+    </contributors>
+
+    <scm>
+        <connection>>scm:git:https://github.com/EpicPlanet/${project.name}.git</connection>
+        <developerConnection>scm:git:https://github.com/EpicPlanet/${project.name}.git</developerConnection>
+        <tag>HEAD</tag>
+        <url>https://github.com/EpicPlanet/${project.name}</url>
+    </scm>
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/EpicPlanet/${project.name}/issues</url>
+    </issueManagement>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
