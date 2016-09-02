@@ -30,7 +30,7 @@
 
     <groupId>net.epicpla</groupId>
     <artifactId>placer</artifactId>
-    <version>1.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>Placer</name>
@@ -65,7 +65,6 @@
     </developers>
     <contributors>
         <contributor>
-            <id>GoldenMine</id>
             <name>GoldenMine</name>
             <email>ehe123@naver.com</email>
             <url>http://cafe.naver.com/scriptrunner</url>
