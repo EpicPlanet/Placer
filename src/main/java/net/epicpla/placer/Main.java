@@ -59,14 +59,22 @@ public class Main {
                 } else if (ch == '<') {
                     String place = builder.substring(i, lastHolderStart + 1);
                     if(placeholder.containsKey(place)) {
-                        builder.replace(i, lastHolderStart + 1, placeholder.get(place));
-                    }
-
-                    int temp = builder.length();
-                    for (int j = lastHolderStart; j < temp; j ++) {
-                        if (builder.charAt(j) == '>') {
-                            lastHolderStart = j;
-                            break;
+                        String replaced = placeholder.get(place);
+                        builder.replace(i, lastHolderStart + 1, replaced);
+                        int temp = builder.length();
+                        for (int j = i + replaced.length(); j < temp; j ++) {
+                            if (builder.charAt(j) == '>') {
+                                lastHolderStart = j;
+                                break;
+                            }
+                        }
+                    } else {
+                        int temp = builder.length();
+                        for (int j = lastHolderStart + 1; j < temp; j ++) {
+                            if (builder.charAt(j) == '>') {
+                                lastHolderStart = j;
+                                break;
+                            }
                         }
                     }
                 }
