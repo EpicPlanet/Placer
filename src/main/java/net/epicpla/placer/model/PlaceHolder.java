@@ -30,8 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlaceHolder implements Component {
-    List<Component> components;
+    public List<Component> components;
 
+    // 나중에 전처리 성능 개선 목적으로 쓰일 경우를 대비해서 만들어둠
     public PlaceHolder(List<Component> components) {
         this.components = components;
     }
@@ -78,5 +79,41 @@ public class PlaceHolder implements Component {
             builder.append(component.makeString());
         }
         return Placer.instance.getValue(builder.toString());
+    }
+
+    public boolean isSimple() {
+        return components.size() == 1 && components.get(0) instanceof StringComponent;
+    }
+
+    public void simplifyFakes() {
+        for (int i = 0; i < components.size(); i ++) {
+            Component component = components.get(i);
+            if (component instanceof PlaceHolder) { // component가 PlaceHolder이면
+                ((PlaceHolder) component).simplifyFakes(); // 아래 것들을 모두 정리
+                if (((PlaceHolder) component).isSimple()) { // 간단하고
+                    if (!Placer.instance.hasValue(((PlaceHolder) component).components.get(0).makeString())) { // 그 값이 없으면
+                        components.set(i, new StringComponent("<" + ((PlaceHolder) component).components.get(0).makeString() + ">"));
+                    }
+                }
+            }
+        }
+
+        boolean wasLastString = false;
+        List<Component> newComponents = new ArrayList<>();
+        for (Component component : components) {
+            if (component instanceof StringComponent) {
+                if (wasLastString) {
+                    int lastIndex = newComponents.size() - 1;
+                    newComponents.set(lastIndex, new StringComponent(newComponents.get(lastIndex).makeString() + component.makeString()));
+                } else {
+                    wasLastString = true;
+                    newComponents.add(component);
+                }
+            } else {
+                wasLastString = false;
+                newComponents.add(component);
+            }
+        }
+        components = newComponents;
     }
 }

@@ -26,6 +26,6 @@ package net.epicpla.placer.model;
 
 public interface Component {
 
-    public String makeString();
+    String makeString();
 
 }

@@ -8,6 +8,7 @@ import net.epicpla.placer.legacy.OldPlacer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Main
 {
@@ -33,10 +34,13 @@ public class Main
         System.out.println("GoldenMine님과 Kiwiyou님의 파서는 GPLv3 라이센스이므로 호환되지 않아 제거하였습니다.");
 
         // 플레이스홀더 준비
-        HashMap<String, String> placeholder = new HashMap<String, String>();
+        Map<String, String> placeholder = new HashMap<>();
+        // 플레이스홀더 값을 많이 설정해서 성능 테스트할 때 주석 처리 해제하세요.
+        /*
         for (int i = 0; i < 100; i ++) {
             placeholder.put("<" + i + ">", "no" + i + ";");
         }
+        */
         placeholder.put("<50>", "aa");
         placeholder.put("<ab>", "bb");
 
@@ -48,14 +52,14 @@ public class Main
         //REPEAT = 	 999999;
 
         // 파서 준비
-        List<AbstractParser> parsers = new ArrayList<AbstractParser>();
+        List<AbstractParser> parsers = new ArrayList<>();
         parsers.add(new XkdParser());
         parsers.add(new AhParser());
         parsers.add(new OldPlacer());
         parsers.add(new Placer());
 
         // 오류 검증용 결과값 모음
-        List<String> result = new ArrayList<String>();
+        List<String> result = new ArrayList<>();
 
         // 각 파서에 대해서
         for (AbstractParser parser : parsers)

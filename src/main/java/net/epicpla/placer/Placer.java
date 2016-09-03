@@ -46,6 +46,7 @@ public class Placer extends AbstractParser {
             placeholders.put(key.substring(1, key.length() - 1), placeholder_original.get(key));
         }
         holder = new Root(s);
+        holder.simplifyFakes();
         return true;
     }
 
@@ -60,5 +61,9 @@ public class Placer extends AbstractParser {
         } else {
             return "<" + placeholder + ">";
         }
+    }
+
+    public boolean hasValue(String placeholder) {
+        return placeholders.containsKey(placeholder);
     }
 }
