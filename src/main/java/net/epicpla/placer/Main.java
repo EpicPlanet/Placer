@@ -56,13 +56,12 @@ public class Main {
         System.out.println(System.currentTimeMillis() - start);
     }
 
-    public static String parse(String passedString) {
-        StringBuilder builder = new StringBuilder(passedString);
+    public static String parse(final String passedString) {
+        final StringBuilder builder = new StringBuilder(passedString);
         int lastHolderStart = -1;
         int startSearchFrom = -1;
         for (int i = builder.length() - 1; i >= 0; i --) {
-            char ch = builder.charAt(i);
-            switch (ch) {
+            switch (builder.charAt(i)) {
                 case '>':
                     lastHolderStart = i;
                     break;
@@ -70,9 +69,9 @@ public class Main {
                     if (lastHolderStart == -1) {
                         lastHolderStart = getLastHolderStart(startSearchFrom, builder);
                     }
-                    String place = builder.substring(i + 1, lastHolderStart);
+                    final String place = builder.substring(i + 1, lastHolderStart);
                     if(placeholder.containsKey(place)) {
-                        String replaced = placeholder.get(place);
+                        final String replaced = placeholder.get(place);
                         builder.replace(i, lastHolderStart + 1, replaced);
 
                         startSearchFrom = i + replaced.length();
@@ -88,8 +87,8 @@ public class Main {
         return builder.toString();
     }
 
-    public static int getLastHolderStart(int searchFrom, StringBuilder builder) {
-        int temp = builder.length();
+    public static int getLastHolderStart(final int searchFrom, final StringBuilder builder) {
+        final int temp = builder.length();
         for (int i = searchFrom; i < temp ; i ++) {
             if (builder.charAt(i) == '>') return i;
         }
