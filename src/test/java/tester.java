@@ -22,43 +22,32 @@
  * THE SOFTWARE.
  */
 
-package net.epicpla.placer;
-
-import com.naver.cafe.goldbigdragon.xkd.parsertester.AbstractParser;
-import net.epicpla.placer.model.Root;
+import net.epicpla.placer.Placer;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Placer extends AbstractParser {
+public class tester {
 
-    public Root holder;
-    public Map<String, String> placeholders = new HashMap<>();
-
-    @Override
-    public boolean prepare(String s, Map<String, String> placeholder_original) {
-        for (String key : placeholder_original.keySet()) {
-            placeholders.put(key.substring(1, key.length() - 1), placeholder_original.get(key));
+    public static void main(String[] args) {
+        String a = "";
+        for (int i = 0; i <= 100; i++) {
+            if (i == 50) {
+                a = a + "<<50>asdf>";
+            }
+            a = a + "<" + i + ">";
         }
-        holder = new Root(s, this);
-        holder.simplifyFakes();
-        return true;
-    }
+        Map<String, String> placeholder = new HashMap<String, String>();
+        placeholder.put("<50>", "aa");
+        placeholder.put("<ab>", "bb");
 
-    @Override
-    public String parse(String source, Map<String, String> placeholder) {
-        return holder.makeString();
-    }
-
-    public String getValue(String placeholder) {
-        if (placeholders.containsKey(placeholder)) {
-            return placeholders.get(placeholder);
-        } else {
-            return "<" + placeholder + ">";
+        Placer fc = new Placer();
+        fc.prepare(new String(a), placeholder);
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < 100000; i++) {
+            fc.parse(a, placeholder);
         }
+        System.out.println(System.currentTimeMillis() - start);
     }
 
-    public boolean hasValue(String placeholder) {
-        return placeholders.containsKey(placeholder);
-    }
 }

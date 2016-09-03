@@ -30,14 +30,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlaceHolder implements Component {
+
+    public Placer placer;
     public List<Component> components;
 
     // 나중에 전처리 성능 개선 목적으로 쓰일 경우를 대비해서 만들어둠
-    public PlaceHolder(List<Component> components) {
+    public PlaceHolder(List<Component> components, Placer placer) {
         this.components = components;
+        this.placer = placer;
     }
 
-    public PlaceHolder(String source) {
+    public PlaceHolder(String source, Placer placer) {
+        this.placer = placer;
         components = new ArrayList<>();
         int depth = 0;
         StringBuilder builtString = new StringBuilder();
@@ -53,7 +57,7 @@ public class PlaceHolder implements Component {
                     break;
                 case '>':
                     if (depth == 1) {
-                        components.add(new PlaceHolder(builtString.toString()));
+                        components.add(new PlaceHolder(builtString.toString(), placer));
                         builtString = new StringBuilder();
                     }
                     depth--;
@@ -66,7 +70,7 @@ public class PlaceHolder implements Component {
         if (depth == 0) {
             components.add(new StringComponent(builtString.toString()));
         } else if (depth == 1){
-            components.add(new PlaceHolder(builtString.toString()));
+            components.add(new PlaceHolder(builtString.toString(), placer));
         } else {
             throw new UnsupportedOperationException("Error in the source");
         }
@@ -78,7 +82,7 @@ public class PlaceHolder implements Component {
         for (Component component : components) {
             builder.append(component.makeString());
         }
-        return Placer.instance.getValue(builder.toString());
+        return placer.getValue(builder.toString());
     }
 
     public boolean isSimple() {
@@ -91,7 +95,7 @@ public class PlaceHolder implements Component {
             if (component instanceof PlaceHolder) { // component가 PlaceHolder이면
                 ((PlaceHolder) component).simplifyFakes(); // 아래 것들을 모두 정리
                 if (((PlaceHolder) component).isSimple()) { // 간단하고
-                    if (!Placer.instance.hasValue(((PlaceHolder) component).components.get(0).makeString())) { // 그 값이 없으면
+                    if (!placer.hasValue(((PlaceHolder) component).components.get(0).makeString())) { // 그 값이 없으면
                         components.set(i, new StringComponent("<" + ((PlaceHolder) component).components.get(0).makeString() + ">"));
                     }
                 }

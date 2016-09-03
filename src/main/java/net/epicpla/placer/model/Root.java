@@ -30,13 +30,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Root {
-    List<Component> components;
 
-    public Root(List<Component> components) {
+    public Placer placer;
+    public List<Component> components;
+
+    public Root(List<Component> components, Placer placer) {
         this.components = components;
+        this.placer = placer;
     }
 
-    public Root(String source) {
+    public Root(String source, Placer placer) {
+        this.placer = placer;
         components = new ArrayList<>();
         int depth = 0;
         StringBuilder builtString = new StringBuilder();
@@ -54,7 +58,7 @@ public class Root {
                     break;
                 case '>':
                     if (depth == 1) {
-                        components.add(new PlaceHolder(builtString.toString()));
+                        components.add(new PlaceHolder(builtString.toString(), placer));
                         builtString = new StringBuilder();
                     } else {
                         builtString.append(character);
@@ -69,7 +73,7 @@ public class Root {
         if (depth == 0) {
             components.add(new StringComponent(builtString.toString()));
         } else if (depth == 1){
-            components.add(new PlaceHolder(builtString.toString()));
+            components.add(new PlaceHolder(builtString.toString(), placer));
         } else {
             throw new UnsupportedOperationException("Error in the source");
         }
@@ -89,7 +93,7 @@ public class Root {
             if (component instanceof PlaceHolder) { // component가 PlaceHolder이면
                 ((PlaceHolder) component).simplifyFakes(); // 아래 것들을 모두 정리
                 if (((PlaceHolder) component).isSimple()) { // 간단하고
-                    if (!Placer.instance.hasValue(((PlaceHolder) component).components.get(0).makeString())) { // 그 값이 없으면
+                    if (!placer.hasValue(((PlaceHolder) component).components.get(0).makeString())) { // 그 값이 없으면
                         components.set(i, new StringComponent("<" + ((PlaceHolder) component).components.get(0).makeString() + ">"));
                     }
                 }

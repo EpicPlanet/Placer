@@ -51,8 +51,10 @@ public class Main
         int REPEAT = 100000;
         //REPEAT = 	 999999;
 
-        // 파서 준비
+        // 파서 준비. 어느 것을 먼저 하는지에 따라 속도가 달라지는 경우가 있으므로 Placer, OldPlacer를 여러 개 배치함
         List<AbstractParser> parsers = new ArrayList<>();
+        parsers.add(new Placer());
+        parsers.add(new OldPlacer());
         parsers.add(new XkdParser());
         parsers.add(new AhParser());
         parsers.add(new OldPlacer());
