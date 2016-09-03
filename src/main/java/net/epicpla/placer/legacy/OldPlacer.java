@@ -22,42 +22,19 @@
  * THE SOFTWARE.
  */
 
-package net.epicpla.placer;
+package net.epicpla.placer.legacy;
+
+import com.naver.cafe.goldbigdragon.xkd.parsertester.AbstractParser;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Main {
+public class OldPlacer extends AbstractParser {
 
-    public static Map<String, String> placeholder = new HashMap<>();
+    public Map<String, String> placeholder = new HashMap<>();
 
-    static {
-        placeholder.put("50", "aa");
-        placeholder.put("ab", "bb");
-    }
-
-    public static void main(final String[] args) {
-        final StringBuilder passedStringBuilder = new StringBuilder("");
-        for (int i = 0; i <= 100; i++) {
-            if (i == 50) {
-                passedStringBuilder.append("<<").append(i).append(">asdf>");
-            }
-            passedStringBuilder.append("<").append(i).append(">");
-        }
-
-        final String passedString = passedStringBuilder.toString();
-        System.out.println(passedStringBuilder);
-
-        long start = System.currentTimeMillis();
-        for (int tt = 0; tt < 100000; tt ++) {
-            final String result = parse(passedString);
-            if (tt == 0) System.out.println(result);
-        }
-        System.out.println(System.currentTimeMillis() - start);
-    }
-
-    public static String parse(final String passedString) {
-        final StringBuilder builder = new StringBuilder(passedString);
+    public String parse(String source, Map<String, String> placeholderNotUsed) {
+        final StringBuilder builder = new StringBuilder(source);
         int lastHolderStart = -1;
         int startSearchFrom = -1;
         for (int i = builder.length() - 1; i >= 0; i --) {
@@ -70,7 +47,7 @@ public class Main {
                         lastHolderStart = getLastHolderStart(startSearchFrom, builder);
                     }
                     final String place = builder.substring(i + 1, lastHolderStart);
-                    if(placeholder.containsKey(place)) {
+                    if (placeholder.containsKey(place)) {
                         final String replaced = placeholder.get(place);
                         builder.replace(i, lastHolderStart + 1, replaced);
 
@@ -94,5 +71,13 @@ public class Main {
         }
 
         return -1;
+    }
+
+    @Override
+    public boolean prepare(String s, Map<String, String> placeholder_original) {
+        for (String key : placeholder_original.keySet()) {
+            placeholder.put(key.substring(1, key.length() - 1), placeholder_original.get(key));
+        }
+        return true;
     }
 }
