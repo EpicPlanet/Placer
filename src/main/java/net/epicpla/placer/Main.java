@@ -37,7 +37,7 @@ public class Main {
     }
 
     public static void main(final String[] args) {
-        StringBuilder passedStringBuilder = new StringBuilder("");
+        final StringBuilder passedStringBuilder = new StringBuilder("");
         for (int i = 0; i <= 100; i++) {
             if (i == 50) {
                 passedStringBuilder.append("<<").append(i).append(">asdf>");
@@ -45,12 +45,12 @@ public class Main {
             passedStringBuilder.append("<").append(i).append(">");
         }
 
-        String passedString = passedStringBuilder.toString();
+        final String passedString = passedStringBuilder.toString();
         System.out.println(passedStringBuilder);
 
         long start = System.currentTimeMillis();
         for (int tt = 0; tt < 100000; tt ++) {
-            String result = parse(passedString);
+            final String result = parse(passedString);
             if (tt == 0) System.out.println(result);
         }
         System.out.println(System.currentTimeMillis() - start);
