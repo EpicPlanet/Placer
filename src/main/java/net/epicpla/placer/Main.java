@@ -52,36 +52,41 @@ public class Main {
         for (int tt = 0; tt < 100000; tt ++) {
             StringBuilder builder = new StringBuilder(passedString);
             int lastHolderStart = 0;
+            int startSearchFrom = -1;
             for (int i = builder.length() - 1; i >= 0; i --) {
                 char ch = builder.charAt(i);
                 if (ch == '>') {
                     lastHolderStart = i;
                 } else if (ch == '<') {
+                    if (lastHolderStart == -1) {
+                        lastHolderStart = getLastHolderStart(startSearchFrom, builder);
+                    }
                     String place = builder.substring(i, lastHolderStart + 1);
                     if(placeholder.containsKey(place)) {
                         String replaced = placeholder.get(place);
                         builder.replace(i, lastHolderStart + 1, replaced);
-                        int temp = builder.length();
-                        for (int j = i + replaced.length(); j < temp; j ++) {
-                            if (builder.charAt(j) == '>') {
-                                lastHolderStart = j;
-                                break;
-                            }
-                        }
+
+                        startSearchFrom = i + replaced.length();
+                        lastHolderStart = -1;
                     } else {
-                        int temp = builder.length();
-                        for (int j = lastHolderStart + 1; j < temp; j ++) {
-                            if (builder.charAt(j) == '>') {
-                                lastHolderStart = j;
-                                break;
-                            }
-                        }
+                        startSearchFrom = lastHolderStart + 1;
+                        lastHolderStart = -1;
                     }
                 }
+
             }
             String result = builder.toString();
             if (tt == 99999) System.out.println(result);
         }
         System.out.println(System.currentTimeMillis() - start);
+    }
+
+    public static int getLastHolderStart(int searchFrom, StringBuilder builder) {
+        int temp = builder.length();
+        for (int i = searchFrom; i < temp ; i ++) {
+            if (builder.charAt(i) == '>') return i;
+        }
+
+        return -1;
     }
 }
