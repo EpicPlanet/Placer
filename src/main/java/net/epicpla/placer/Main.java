@@ -50,14 +50,23 @@ public class Main {
 
         long start = System.currentTimeMillis();
         for (int tt = 0; tt < 100000; tt ++) {
-            StringBuilder builder = new StringBuilder(passedString);
-            int lastHolderStart = 0;
-            int startSearchFrom = -1;
-            for (int i = builder.length() - 1; i >= 0; i --) {
-                char ch = builder.charAt(i);
-                if (ch == '>') {
+            String result = parse(passedString);
+            if (tt == 0) System.out.println(result);
+        }
+        System.out.println(System.currentTimeMillis() - start);
+    }
+
+    public static String parse(String passedString) {
+        StringBuilder builder = new StringBuilder(passedString);
+        int lastHolderStart = -1;
+        int startSearchFrom = -1;
+        for (int i = builder.length() - 1; i >= 0; i --) {
+            char ch = builder.charAt(i);
+            switch (ch) {
+                case '>':
                     lastHolderStart = i;
-                } else if (ch == '<') {
+                    break;
+                case '<':
                     if (lastHolderStart == -1) {
                         lastHolderStart = getLastHolderStart(startSearchFrom, builder);
                     }
@@ -72,13 +81,11 @@ public class Main {
                         startSearchFrom = lastHolderStart + 1;
                         lastHolderStart = -1;
                     }
-                }
-
+                    break;
             }
-            String result = builder.toString();
-            if (tt == 99999) System.out.println(result);
+
         }
-        System.out.println(System.currentTimeMillis() - start);
+        return builder.toString();
     }
 
     public static int getLastHolderStart(int searchFrom, StringBuilder builder) {
