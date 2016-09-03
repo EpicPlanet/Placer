@@ -32,8 +32,8 @@ public class Main {
     public static Map<String, String> placeholder = new HashMap<>();
 
     static {
-        placeholder.put("<50>", "aa");
-        placeholder.put("<ab>", "bb");
+        placeholder.put("50", "aa");
+        placeholder.put("ab", "bb");
     }
 
     public static void main(final String[] args) {
@@ -61,7 +61,7 @@ public class Main {
                     if (lastHolderStart == -1) {
                         lastHolderStart = getLastHolderStart(startSearchFrom, builder);
                     }
-                    String place = builder.substring(i, lastHolderStart + 1);
+                    String place = builder.substring(i + 1, lastHolderStart);
                     if(placeholder.containsKey(place)) {
                         String replaced = placeholder.get(place);
                         builder.replace(i, lastHolderStart + 1, replaced);
