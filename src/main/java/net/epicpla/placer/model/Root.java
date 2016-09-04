@@ -24,6 +24,7 @@
 
 package net.epicpla.placer.model;
 
+import net.epicpla.placer.MapWrapper;
 import net.epicpla.placer.Placer;
 
 import java.util.ArrayList;
@@ -33,6 +34,8 @@ public class Root {
 
     public Placer placer;
     public List<Component> components;
+
+    int current;
 
     public Root(List<Component> components, Placer placer) {
         this.components = components;
@@ -80,11 +83,29 @@ public class Root {
     }
 
     public String makeString() {
-        StringBuilder builder = new StringBuilder();
-        for (Component component : components) {
-            builder.append(component.makeString());
+        int size = components.size();
+        Object syncObject = new Object();
+        MapWrapper componentStrings = new MapWrapper(size, syncObject);
+
+        for (int i = 0; i < size; i ++) {
+            int index = i;
+            Thread thread = new Thread(() -> {
+                componentStrings.put(index, components.get(index).makeString());
+            });
+
+            thread.start();
         }
-        return builder.toString();
+
+        synchronized (syncObject) {
+            while (!componentStrings.ready) {
+                try {
+                    syncObject.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return componentStrings.buildString();
+        }
     }
 
     public void simplifyFakes() {

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Main
+public class ParserTester
 {
     // 테스트용 식을 준비한다
     private static String prepareTestExpression()
@@ -48,7 +48,7 @@ public class Main
         String exp = prepareTestExpression();
 
         // 파싱 반복 횟수 지정
-        int REPEAT = 100000;
+        int REPEAT = 10000;
         //REPEAT = 	 999999;
 
         // 파서 준비. 어느 것을 먼저 하는지에 따라 속도가 달라지는 경우가 있으므로 Placer, OldPlacer를 여러 개 배치함

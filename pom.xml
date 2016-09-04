@@ -30,7 +30,7 @@
 
     <groupId>net.epicpla</groupId>
     <artifactId>placer</artifactId>
-    <version>2.3</version>
+    <version>3.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Placer</name>
@@ -109,7 +109,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.naver.cafe.goldbigdragon.xkd.parsertester.Main</mainClass>
+                            <mainClass>com.naver.cafe.goldbigdragon.xkd.parsertester.ParserTester</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
