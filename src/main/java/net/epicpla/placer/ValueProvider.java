@@ -34,4 +34,6 @@ public interface ValueProvider {
 
     String getValue(String key);
 
+    void getValueAndAppend(String key, StringBuilder builder);
+
 }

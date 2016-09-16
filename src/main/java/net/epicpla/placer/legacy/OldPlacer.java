@@ -27,15 +27,24 @@ package net.epicpla.placer.legacy;
 import java.util.HashMap;
 import java.util.Map;
 
-public class OldPlacer{
+public class OldPlacer {
 
     public Map<String, String> placeholder = new HashMap<>();
+
+    public static int getLastHolderStart(final int searchFrom, final StringBuilder builder) {
+        final int temp = builder.length();
+        for (int i = searchFrom; i < temp; i++) {
+            if (builder.charAt(i) == '>') return i;
+        }
+
+        return -1;
+    }
 
     public String parse(String source, Map<String, String> placeholderNotUsed) {
         final StringBuilder builder = new StringBuilder(source);
         int lastHolderStart = -1;
         int startSearchFrom = -1;
-        for (int i = builder.length() - 1; i >= 0; i --) {
+        for (int i = builder.length() - 1; i >= 0; i--) {
             switch (builder.charAt(i)) {
                 case '>':
                     lastHolderStart = i;
@@ -60,15 +69,6 @@ public class OldPlacer{
 
         }
         return builder.toString();
-    }
-
-    public static int getLastHolderStart(final int searchFrom, final StringBuilder builder) {
-        final int temp = builder.length();
-        for (int i = searchFrom; i < temp ; i ++) {
-            if (builder.charAt(i) == '>') return i;
-        }
-
-        return -1;
     }
 
     public boolean prepare(String s, Map<String, String> placeholder_original) {

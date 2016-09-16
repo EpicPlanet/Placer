@@ -30,4 +30,6 @@ public interface Component {
 
     String makeString(ValueProvider provider);
 
+    void makeStringAndAppend(ValueProvider provider, StringBuilder builder);
+
 }

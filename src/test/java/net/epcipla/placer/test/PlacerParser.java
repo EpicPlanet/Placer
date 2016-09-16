@@ -34,8 +34,7 @@ public class PlacerParser extends AbstractProcessor {
     public Placer placer;
 
     @Override
-    public boolean prepare(String source, Map<String, String> placeholder)
-    {
+    public boolean prepare(String source, Map<String, String> placeholder) {
         placer = new Placer(new TestValueProvider(placeholder), source);
         return true;
     }

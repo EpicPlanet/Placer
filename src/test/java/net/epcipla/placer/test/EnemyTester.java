@@ -21,26 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package net.epcipla.placer.test;
 
-package net.epicpla.placer.model;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import io.github.minemung.placeholderengine.xkdfinal.XkdFinalProcessorB;
 
-import net.epicpla.placer.ValueProvider;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 
-public class StringComponent implements Component {
+public class EnemyTester {
+    public static void main(String[] args) {
+        Map<String, String> placeholder = new HashMap<>();
+        placeholder.put("<50>", "aa");
+        placeholder.put("<ab>", "bb");
+        String a = "";
 
-    private String value;
+        for (int i = 0; i <= 100; i++) {
+            if (i == 50) {
+                a = a + "<<" + i + ">" + "asdf>";
+            }
+            a = a + "<" + i + ">";
+        }
+        XkdFinalProcessorB enemy = new XkdFinalProcessorB();
+        enemy.prepare(a, placeholder);
+        try (Writer writer = new FileWriter("EnemyOutput.json")) {
+            Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
+            gson.toJson(enemy, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-    public StringComponent(String value) {
-        this.value = value;
-    }
-
-    @Override
-    public String makeString(ValueProvider provider) {
-        return value;
-    }
-
-    @Override
-    public void makeStringAndAppend(ValueProvider provider, StringBuilder builder) {
-        builder.append(value);
+        while (true) {
+            enemy.process(a, placeholder);
+        }
     }
 }

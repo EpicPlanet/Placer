@@ -37,8 +37,7 @@ public class OldPlacerParser extends AbstractProcessor {
     OldPlacer oldPlacer = new OldPlacer();
 
     @Override
-    public boolean prepare(String source, Map<String, String> placeholder)
-    {
+    public boolean prepare(String source, Map<String, String> placeholder) {
         return oldPlacer.prepare(source, placeholder);
     }
 

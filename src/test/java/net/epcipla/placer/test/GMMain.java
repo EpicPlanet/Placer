@@ -22,25 +22,45 @@
  * THE SOFTWARE.
  */
 
-package net.epicpla.placer.model;
+package net.epcipla.placer.test;
 
-import net.epicpla.placer.ValueProvider;
+import io.github.minemung.placeholderengine.xkdfinal.XkdFinalProcessorB;
+import net.epicpla.placer.Placer;
 
-public class StringComponent implements Component {
+import java.util.HashMap;
+import java.util.Map;
 
-    private String value;
+/**
+ * Created by final on 9/16/2016.
+ */
+public class GMMain {
+    public static void main(String[] args) {
+        String a = "";
+        for (int i = 0; i <= 100; i++) {
+            if (i == 50) {
+                a = a + "<<50>asdf>";
+            }
+            a = a + "<" + i + ">";
+        }
+        Map<String, String> placeholder = new HashMap<>();
+        placeholder.put("<50>", "aa");
+        placeholder.put("<ab>", "bb");
 
-    public StringComponent(String value) {
-        this.value = value;
-    }
+        Placer placer = new Placer(new TestValueProvider(placeholder), a);
 
-    @Override
-    public String makeString(ValueProvider provider) {
-        return value;
-    }
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < 100000; i++) {
+            placer.parse();
+        }
+        System.out.println(System.currentTimeMillis() - start);
 
-    @Override
-    public void makeStringAndAppend(ValueProvider provider, StringBuilder builder) {
-        builder.append(value);
+        XkdFinalProcessorB enemy = new XkdFinalProcessorB();
+        enemy.prepare(a, placeholder);
+
+        long start1 = System.currentTimeMillis();
+        for (int i = 0; i < 100000; i++) {
+            enemy.process(a, placeholder);
+        }
+        System.out.println(System.currentTimeMillis() - start1);
     }
 }

@@ -47,7 +47,9 @@ public class PlaceHolder implements Component {
             switch (character) {
                 case '<':
                     if (depth == 0) {
-                        components.add(new StringComponent(builtString.toString()));
+                        if (builtString.length() != 0) {
+                            components.add(new StringComponent(builtString.toString()));
+                        }
                         builtString = new StringBuilder();
                     } else {
                         builtString.append(character);
@@ -69,8 +71,8 @@ public class PlaceHolder implements Component {
             }
         }
         if (depth == 0) {
-            components.add(new StringComponent(builtString.toString()));
-        } else if (depth == 1){
+            if (builtString.length() != 0) components.add(new StringComponent(builtString.toString()));
+        } else if (depth == 1) {
             components.add(new PlaceHolder(builtString.toString()));
         } else {
             throw new UnsupportedOperationException("Error in the source");
@@ -81,9 +83,18 @@ public class PlaceHolder implements Component {
     public String makeString(ValueProvider provider) {
         StringBuilder builder = new StringBuilder();
         for (Component component : components) {
-            builder.append(component.makeString(provider));
+            component.makeStringAndAppend(provider, builder);
         }
         return provider.getValue(builder.toString());
+    }
+
+    @Override
+    public void makeStringAndAppend(ValueProvider provider, StringBuilder builderToAppend) {
+        StringBuilder builder = new StringBuilder();
+        for (Component component : components) {
+            component.makeStringAndAppend(provider, builder);
+        }
+        provider.getValueAndAppend(builder.toString(), builderToAppend);
     }
 
     public boolean isSimple() {
@@ -91,7 +102,7 @@ public class PlaceHolder implements Component {
     }
 
     public void simplifyFakes(ValueProvider provider) {
-        for (int i = 0; i < components.size(); i ++) {
+        for (int i = 0; i < components.size(); i++) {
             Component component = components.get(i);
             if (component instanceof PlaceHolder) { // component가 PlaceHolder이면
                 ((PlaceHolder) component).simplifyFakes(provider); // 아래 것들을 모두 정리

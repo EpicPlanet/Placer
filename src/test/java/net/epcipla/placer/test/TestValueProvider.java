@@ -53,4 +53,13 @@ public class TestValueProvider implements ValueProvider {
             return "<" + key + ">";
         }
     }
+
+    @Override
+    public void getValueAndAppend(String key, StringBuilder builder) {
+        if (placeholders.containsKey(key)) {
+            builder.append(placeholders.get(key));
+        } else {
+            builder.append("<").append(key).append(">");
+        }
+    }
 }
