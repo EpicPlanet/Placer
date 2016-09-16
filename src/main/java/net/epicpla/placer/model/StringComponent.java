@@ -24,6 +24,8 @@
 
 package net.epicpla.placer.model;
 
+import net.epicpla.placer.ValueProvider;
+
 public class StringComponent implements Component {
 
     private String value;
@@ -33,7 +35,7 @@ public class StringComponent implements Component {
     }
 
     @Override
-    public String makeString() {
+    public String makeString(ValueProvider provider) {
         return value;
     }
 }

@@ -22,12 +22,16 @@
  * THE SOFTWARE.
  */
 
-package net.epicpla.placer.model;
+package net.epicpla.placer;
 
-import net.epicpla.placer.ValueProvider;
+/**
+ * 플레이스홀더의 값을 받아오는 클래스입니다.
+ * 단순한 HashMap 기반의 ValueProvider는 test의 net.epicpla.placer.test.TestValueProvider에 구현되어있습니다.
+ */
+public interface ValueProvider {
 
-public interface Component {
+    boolean hasValue(String key);
 
-    String makeString(ValueProvider provider);
+    String getValue(String key);
 
 }

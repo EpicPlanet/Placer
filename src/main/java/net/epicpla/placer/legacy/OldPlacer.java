@@ -24,12 +24,10 @@
 
 package net.epicpla.placer.legacy;
 
-import com.naver.cafe.goldbigdragon.xkd.parsertester.AbstractParser;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class OldPlacer extends AbstractParser {
+public class OldPlacer{
 
     public Map<String, String> placeholder = new HashMap<>();
 
@@ -73,7 +71,6 @@ public class OldPlacer extends AbstractParser {
         return -1;
     }
 
-    @Override
     public boolean prepare(String s, Map<String, String> placeholder_original) {
         for (String key : placeholder_original.keySet()) {
             placeholder.put(key.substring(1, key.length() - 1), placeholder_original.get(key));

@@ -24,23 +24,20 @@
 
 package net.epicpla.placer.model;
 
-import net.epicpla.placer.Placer;
+import net.epicpla.placer.ValueProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Root {
 
-    public Placer placer;
     public List<Component> components;
 
-    public Root(List<Component> components, Placer placer) {
+    public Root(List<Component> components) {
         this.components = components;
-        this.placer = placer;
     }
 
-    public Root(String source, Placer placer) {
-        this.placer = placer;
+    public Root(String source) {
         components = new ArrayList<>();
         int depth = 0;
         StringBuilder builtString = new StringBuilder();
@@ -58,7 +55,7 @@ public class Root {
                     break;
                 case '>':
                     if (depth == 1) {
-                        components.add(new PlaceHolder(builtString.toString(), placer));
+                        components.add(new PlaceHolder(builtString.toString()));
                         builtString = new StringBuilder();
                     } else {
                         builtString.append(character);
@@ -73,28 +70,28 @@ public class Root {
         if (depth == 0) {
             components.add(new StringComponent(builtString.toString()));
         } else if (depth == 1){
-            components.add(new PlaceHolder(builtString.toString(), placer));
+            components.add(new PlaceHolder(builtString.toString()));
         } else {
             throw new UnsupportedOperationException("Error in the source");
         }
     }
 
-    public String makeString() {
+    public String makeString(ValueProvider provider) {
         StringBuilder builder = new StringBuilder();
         for (Component component : components) {
-            builder.append(component.makeString());
+            builder.append(component.makeString(provider));
         }
         return builder.toString();
     }
 
-    public void simplifyFakes() {
+    public void simplifyFakes(ValueProvider provider) {
         for (int i = 0; i < components.size(); i ++) {
             Component component = components.get(i);
             if (component instanceof PlaceHolder) { // component가 PlaceHolder이면
-                ((PlaceHolder) component).simplifyFakes(); // 아래 것들을 모두 정리
+                ((PlaceHolder) component).simplifyFakes(provider); // 아래 것들을 모두 정리
                 if (((PlaceHolder) component).isSimple()) { // 간단하고
-                    if (!placer.hasValue(((PlaceHolder) component).components.get(0).makeString())) { // 그 값이 없으면
-                        components.set(i, new StringComponent("<" + ((PlaceHolder) component).components.get(0).makeString() + ">"));
+                    if (!provider.hasValue(((PlaceHolder) component).components.get(0).makeString(provider))) { // 그 값이 없으면
+                        components.set(i, new StringComponent("<" + ((PlaceHolder) component).components.get(0).makeString(provider) + ">"));
                     }
                 }
             }
@@ -106,7 +103,7 @@ public class Root {
             if (component instanceof StringComponent) {
                 if (wasLastString) {
                     int lastIndex = newComponents.size() - 1;
-                    newComponents.set(lastIndex, new StringComponent(newComponents.get(lastIndex).makeString() + component.makeString()));
+                    newComponents.set(lastIndex, new StringComponent(newComponents.get(lastIndex).makeString(provider) + component.makeString(provider)));
                 } else {
                     wasLastString = true;
                     newComponents.add(component);

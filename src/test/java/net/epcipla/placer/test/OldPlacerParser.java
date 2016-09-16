@@ -22,12 +22,28 @@
  * THE SOFTWARE.
  */
 
-package net.epicpla.placer.model;
+package net.epcipla.placer.test;
 
-import net.epicpla.placer.ValueProvider;
+import io.github.minemung.placeholderengine.AbstractProcessor;
+import net.epicpla.placer.legacy.OldPlacer;
 
-public interface Component {
+import java.util.Map;
 
-    String makeString(ValueProvider provider);
+/**
+ * Created by final on 9/16/2016.
+ */
+public class OldPlacerParser extends AbstractProcessor {
 
+    OldPlacer oldPlacer = new OldPlacer();
+
+    @Override
+    public boolean prepare(String source, Map<String, String> placeholder)
+    {
+        return oldPlacer.prepare(source, placeholder);
+    }
+
+    @Override
+    public String process(String source, Map<String, String> placeholder) {
+        return oldPlacer.parse(source, placeholder);
+    }
 }

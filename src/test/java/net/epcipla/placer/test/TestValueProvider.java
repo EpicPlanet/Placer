@@ -22,12 +22,35 @@
  * THE SOFTWARE.
  */
 
-package net.epicpla.placer.model;
+package net.epcipla.placer.test;
 
 import net.epicpla.placer.ValueProvider;
 
-public interface Component {
+import java.util.HashMap;
+import java.util.Map;
 
-    String makeString(ValueProvider provider);
+public class TestValueProvider implements ValueProvider {
 
+    private Map<String, String> placeholders = new HashMap<>();
+
+    public TestValueProvider(Map<String, String> originalPlaceHolders) {
+        for (Map.Entry<String, String> entry : originalPlaceHolders.entrySet()) {
+            String key = entry.getKey();
+            placeholders.put(key.substring(1, key.length() - 1), entry.getValue());
+        }
+    }
+
+    @Override
+    public boolean hasValue(String key) {
+        return placeholders.containsKey(key);
+    }
+
+    @Override
+    public String getValue(String key) {
+        if (placeholders.containsKey(key)) {
+            return placeholders.get(key);
+        } else {
+            return "<" + key + ">";
+        }
+    }
 }

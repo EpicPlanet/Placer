@@ -24,41 +24,30 @@
 
 package net.epicpla.placer;
 
-import com.naver.cafe.goldbigdragon.xkd.parsertester.AbstractParser;
 import net.epicpla.placer.model.Root;
 
-import java.util.HashMap;
-import java.util.Map;
+public class Placer {
 
-public class Placer extends AbstractParser {
-
+    public ValueProvider provider;
     public Root holder;
-    public Map<String, String> placeholders = new HashMap<>();
 
-    @Override
-    public boolean prepare(String s, Map<String, String> placeholder_original) {
-        for (String key : placeholder_original.keySet()) {
-            placeholders.put(key.substring(1, key.length() - 1), placeholder_original.get(key));
-        }
-        holder = new Root(s, this);
-        holder.simplifyFakes();
+    public Placer(ValueProvider provider, String s) {
+        this.provider = provider;
+        prepare(s);
+    }
+
+    public Placer(ValueProvider provider, Root s) {
+        this.provider = provider;
+        holder = s;
+    }
+
+    public boolean prepare(String s) {
+        holder = new Root(s);
+        holder.simplifyFakes(provider);
         return true;
     }
 
-    @Override
-    public String parse(String source, Map<String, String> placeholder) {
-        return holder.makeString();
-    }
-
-    public String getValue(String placeholder) {
-        if (placeholders.containsKey(placeholder)) {
-            return placeholders.get(placeholder);
-        } else {
-            return "<" + placeholder + ">";
-        }
-    }
-
-    public boolean hasValue(String placeholder) {
-        return placeholders.containsKey(placeholder);
+    public String parse() {
+        return holder.makeString(provider);
     }
 }

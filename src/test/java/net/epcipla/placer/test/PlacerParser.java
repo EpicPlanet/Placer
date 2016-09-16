@@ -22,32 +22,26 @@
  * THE SOFTWARE.
  */
 
+package net.epcipla.placer.test;
+
+import io.github.minemung.placeholderengine.AbstractProcessor;
 import net.epicpla.placer.Placer;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class tester {
+public class PlacerParser extends AbstractProcessor {
 
-    public static void main(String[] args) {
-        String a = "";
-        for (int i = 0; i <= 100; i++) {
-            if (i == 50) {
-                a = a + "<<50>asdf>";
-            }
-            a = a + "<" + i + ">";
-        }
-        Map<String, String> placeholder = new HashMap<String, String>();
-        placeholder.put("<50>", "aa");
-        placeholder.put("<ab>", "bb");
+    public Placer placer;
 
-        Placer fc = new Placer();
-        fc.prepare(new String(a), placeholder);
-        long start = System.currentTimeMillis();
-        for (int i = 0; i < 100000; i++) {
-            fc.parse(a, placeholder);
-        }
-        System.out.println(System.currentTimeMillis() - start);
+    @Override
+    public boolean prepare(String source, Map<String, String> placeholder)
+    {
+        placer = new Placer(new TestValueProvider(placeholder), source);
+        return true;
     }
 
+    @Override
+    public String process(String source, Map<String, String> placeholder) {
+        return placer.parse();
+    }
 }
