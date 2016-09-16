@@ -44,7 +44,6 @@ public class Placer {
     public boolean prepare(String s) {
         holder = new Root(s);
         holder.simplifyFakes(provider);
-        holder.readyArray();
         return true;
     }
 
