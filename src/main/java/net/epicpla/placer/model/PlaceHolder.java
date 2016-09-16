@@ -52,6 +52,8 @@ public class PlaceHolder implements Component {
                     if (depth == 0) {
                         components.add(new StringComponent(builtString.toString()));
                         builtString = new StringBuilder();
+                    } else {
+                        builtString.append(character);
                     }
                     depth++;
                     break;
@@ -59,6 +61,8 @@ public class PlaceHolder implements Component {
                     if (depth == 1) {
                         components.add(new PlaceHolder(builtString.toString(), placer));
                         builtString = new StringBuilder();
+                    } else {
+                        builtString.append(character);
                     }
                     depth--;
                     break;
