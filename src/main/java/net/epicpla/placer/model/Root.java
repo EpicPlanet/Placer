@@ -80,8 +80,28 @@ public class Root {
 
     public String makeString(ValueProvider provider) {
         StringBuilder builder = new StringBuilder();
-        for (Component component : components) {
-            component.makeStringAndAppend(provider, builder);
+
+        Thread[] ts = new Thread[components.size()];
+        String[] ss = new String[components.size()];
+        //READY PHASE
+        for (int i = 0; i < components.size(); i++) {
+            Component component = components.get(i);
+            ts[i] = component.startMakingString(provider, ss, i);
+        }
+
+        for (int i = 0; i < components.size(); i++) {
+            Component component = components.get(i);
+            if (ts[i] == null) {
+                builder.append(ss[i]);
+            } else {
+                try {
+                    System.out.println("JOINING");
+                    ts[i].join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                builder.append(ss[i]);
+            }
         }
         return builder.toString();
     }

@@ -26,6 +26,8 @@ package net.epicpla.placer.model;
 
 import net.epicpla.placer.ValueProvider;
 
+import java.util.Optional;
+
 public class StringComponent implements Component {
 
     private String value;
@@ -42,5 +44,11 @@ public class StringComponent implements Component {
     @Override
     public void makeStringAndAppend(ValueProvider provider, StringBuilder builder) {
         builder.append(value);
+    }
+
+    @Override
+    public Thread startMakingString(ValueProvider provider, String[] s, int index) {
+        s[index] = makeString(provider);
+        return null;
     }
 }

@@ -28,6 +28,7 @@ import net.epicpla.placer.ValueProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class PlaceHolder implements Component {
 
@@ -82,8 +83,27 @@ public class PlaceHolder implements Component {
     @Override
     public String makeString(ValueProvider provider) {
         StringBuilder builder = new StringBuilder();
-        for (Component component : components) {
-            component.makeStringAndAppend(provider, builder);
+
+        Thread[] ts = new Thread[components.size()];
+        String[] ss = new String[components.size()];
+        //READY PHASE
+        for (int i = 0; i < components.size(); i++) {
+            Component component = components.get(i);
+            ts[i] = component.startMakingString(provider, ss, i);
+        }
+
+        for (int i = 0; i < components.size(); i++) {
+            Component component = components.get(i);
+            if (ts[i] == null) {
+                builder.append(ss[i]);
+            } else {
+                try {
+                    ts[i].join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                builder.append(ss[i]);
+            }
         }
         return provider.getValue(builder.toString());
     }
@@ -91,10 +111,39 @@ public class PlaceHolder implements Component {
     @Override
     public void makeStringAndAppend(ValueProvider provider, StringBuilder builderToAppend) {
         StringBuilder builder = new StringBuilder();
-        for (Component component : components) {
-            component.makeStringAndAppend(provider, builder);
+
+        Thread[] ts = new Thread[components.size()];
+        String[] ss = new String[components.size()];
+        //READY PHASE
+        for (int i = 0; i < components.size(); i++) {
+            Component component = components.get(i);
+            ts[i] = component.startMakingString(provider, ss, i);
+        }
+
+        for (int i = 0; i < components.size(); i++) {
+            Component component = components.get(i);
+            if (ss[i] != null) {
+                builder.append(ss[i]);
+            } else {
+                try {
+                    ts[i].join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                builder.append(ss[i]);
+            }
         }
         provider.getValueAndAppend(builder.toString(), builderToAppend);
+    }
+
+    @Override
+    public Thread startMakingString(ValueProvider provider, String[] s, int index) {
+        Runnable r = () -> {
+            s[index] = makeString(provider);
+        };
+        Thread t = new Thread(r);
+        t.start();
+        return t;
     }
 
     public boolean isSimple() {
