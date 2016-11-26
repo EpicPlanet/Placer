@@ -26,14 +26,10 @@ package net.epicpla.placer.model;
 
 import net.epicpla.placer.ValueProvider;
 
-import java.util.Optional;
-
 public interface Component {
 
     String makeString(ValueProvider provider);
 
     void makeStringAndAppend(ValueProvider provider, StringBuilder builder);
-
-    Thread startMakingString(ValueProvider provider, String[] s, int index);
 
 }
