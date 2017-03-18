@@ -39,8 +39,4 @@ public class StringComponent implements Component {
         return value;
     }
 
-    @Override
-    public void makeStringAndAppend(ValueProvider provider, StringBuilder builder) {
-        builder.append(value);
-    }
 }

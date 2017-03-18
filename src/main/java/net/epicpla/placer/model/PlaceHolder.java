@@ -31,15 +31,15 @@ import java.util.List;
 
 public class PlaceHolder implements Component {
 
-    public List<Component> components;
+    public Component[] components;
 
     // 나중에 전처리 성능 개선 목적으로 쓰일 경우를 대비해서 만들어둠
-    public PlaceHolder(List<Component> components) {
+    public PlaceHolder(Component[] components) {
         this.components = components;
     }
 
     public PlaceHolder(String source) {
-        components = new ArrayList<>();
+        List<Component> componentsTmp = new ArrayList<>();
         int depth = 0;
         StringBuilder builtString = new StringBuilder();
         for (int i = 0; i < source.length(); i++) {
@@ -48,7 +48,7 @@ public class PlaceHolder implements Component {
                 case '<':
                     if (depth == 0) {
                         if (builtString.length() != 0) {
-                            components.add(new StringComponent(builtString.toString()));
+                            componentsTmp.add(new StringComponent(builtString.toString()));
                         }
                         builtString = new StringBuilder();
                     } else {
@@ -58,7 +58,7 @@ public class PlaceHolder implements Component {
                     break;
                 case '>':
                     if (depth == 1) {
-                        components.add(new PlaceHolder(builtString.toString()));
+                        componentsTmp.add(new PlaceHolder(builtString.toString()));
                         builtString = new StringBuilder();
                     } else {
                         builtString.append(character);
@@ -71,12 +71,14 @@ public class PlaceHolder implements Component {
             }
         }
         if (depth == 0) {
-            if (builtString.length() != 0) components.add(new StringComponent(builtString.toString()));
+            if (builtString.length() != 0) componentsTmp.add(new StringComponent(builtString.toString()));
         } else if (depth == 1) {
-            components.add(new PlaceHolder(builtString.toString()));
+            componentsTmp.add(new PlaceHolder(builtString.toString()));
         } else {
             throw new UnsupportedOperationException("Error in the source");
         }
+
+        components = componentsTmp.toArray(new Component[componentsTmp.size()]);
     }
 
     @Override
@@ -98,17 +100,17 @@ public class PlaceHolder implements Component {
     }
 
     public boolean isSimple() {
-        return components.size() == 1 && components.get(0) instanceof StringComponent;
+        return components.length == 1 && components[0] instanceof StringComponent;
     }
 
     public void simplifyFakes(ValueProvider provider) {
-        for (int i = 0; i < components.size(); i++) {
-            Component component = components.get(i);
+        for (int i = 0; i < components.length; i++) {
+            Component component = components[i];
             if (component instanceof PlaceHolder) { // component가 PlaceHolder이면
                 ((PlaceHolder) component).simplifyFakes(provider); // 아래 것들을 모두 정리
                 if (((PlaceHolder) component).isSimple()) { // 간단하고
-                    if (!provider.hasValue(((PlaceHolder) component).components.get(0).makeString(provider))) { // 그 값이 없으면
-                        components.set(i, new StringComponent("<" + ((PlaceHolder) component).components.get(0).makeString(provider) + ">"));
+                    if (!provider.hasValue(((PlaceHolder) component).components[0].makeString(provider))) { // 그 값이 없으면
+                        components[i] = new StringComponent("<" + ((PlaceHolder) component).components[0].makeString(provider) + ">");
                     }
                 }
             }
@@ -130,6 +132,6 @@ public class PlaceHolder implements Component {
                 newComponents.add(component);
             }
         }
-        components = newComponents;
+        components = newComponents.toArray(new Component[newComponents.size()]);
     }
 }

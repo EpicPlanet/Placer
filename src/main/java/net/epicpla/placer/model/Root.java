@@ -31,14 +31,14 @@ import java.util.List;
 
 public class Root {
 
-    public List<Component> components;
+    public Component[] components;
 
-    public Root(List<Component> components) {
+    public Root(Component[] components) {
         this.components = components;
     }
 
     public Root(String source) {
-        components = new ArrayList<>();
+        List<Component> componentsTmp = new ArrayList<>();
         int depth = 0;
         StringBuilder builtString = new StringBuilder();
         for (int i = 0; i < source.length(); i++) {
@@ -47,7 +47,7 @@ public class Root {
                 case '<':
                     if (depth == 0) {
                         if (builtString.length() != 0) {
-                            components.add(new StringComponent(builtString.toString()));
+                            componentsTmp.add(new StringComponent(builtString.toString()));
                         }
                         builtString = new StringBuilder();
                     } else {
@@ -57,7 +57,7 @@ public class Root {
                     break;
                 case '>':
                     if (depth == 1) {
-                        components.add(new PlaceHolder(builtString.toString()));
+                        componentsTmp.add(new PlaceHolder(builtString.toString()));
                         builtString = new StringBuilder();
                     } else {
                         builtString.append(character);
@@ -70,12 +70,14 @@ public class Root {
             }
         }
         if (depth == 0) {
-            if (builtString.length() != 0) components.add(new StringComponent(builtString.toString()));
+            if (builtString.length() != 0) componentsTmp.add(new StringComponent(builtString.toString()));
         } else if (depth == 1) {
-            components.add(new PlaceHolder(builtString.toString()));
+            componentsTmp.add(new PlaceHolder(builtString.toString()));
         } else {
             throw new UnsupportedOperationException("Error in the source");
         }
+
+        components = componentsTmp.toArray(new Component[componentsTmp.size()]);
     }
 
     public String makeString(ValueProvider provider) {
@@ -86,14 +88,22 @@ public class Root {
         return builder.toString();
     }
 
+    public String makeString(ValueProvider provider, int capacity) {
+        StringBuilder builder = new StringBuilder(capacity);
+        for (Component component : components) {
+            component.makeStringAndAppend(provider, builder);
+        }
+        return builder.toString();
+    }
+
     public void simplifyFakes(ValueProvider provider) {
-        for (int i = 0; i < components.size(); i++) {
-            Component component = components.get(i);
+        for (int i = 0; i < components.length; i++) {
+            Component component = components[i];
             if (component instanceof PlaceHolder) { // component가 PlaceHolder이면
                 ((PlaceHolder) component).simplifyFakes(provider); // 아래 것들을 모두 정리
                 if (((PlaceHolder) component).isSimple()) { // 간단하고
-                    if (!provider.hasValue(((PlaceHolder) component).components.get(0).makeString(provider))) { // 그 값이 없으면
-                        components.set(i, new StringComponent("<" + ((PlaceHolder) component).components.get(0).makeString(provider) + ">"));
+                    if (!provider.hasValue(((PlaceHolder) component).components[0].makeString(provider))) { // 그 값이 없으면
+                        components[i] =  new StringComponent("<" + ((PlaceHolder) component).components[0].makeString(provider) + ">");
                     }
                 }
             }
@@ -115,6 +125,6 @@ public class Root {
                 newComponents.add(component);
             }
         }
-        components = newComponents;
+        components = newComponents.toArray(new Component[newComponents.size()]);
     }
 }

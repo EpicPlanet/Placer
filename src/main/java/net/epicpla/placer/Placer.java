@@ -31,9 +31,13 @@ public class Placer {
     public ValueProvider provider;
     public Root holder;
 
+    public int capacity;
+
     public Placer(ValueProvider provider, String s) {
         this.provider = provider;
         prepare(s);
+
+        capacity = s.length() + 16;
     }
 
     public Placer(ValueProvider provider, Root s) {
@@ -48,6 +52,6 @@ public class Placer {
     }
 
     public String parse() {
-        return holder.makeString(provider);
+        return holder.makeString(provider, capacity);
     }
 }
